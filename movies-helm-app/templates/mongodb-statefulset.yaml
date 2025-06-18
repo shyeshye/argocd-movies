@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.mongodb.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.mongodb.labels.app }}
+  serviceName: {{ .Values.mongodb.service.name }}
+  replicas: {{ .Values.mongodb.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.mongodb.labels.app }}
+    spec:
+      containers:
+        - name: {{ .Values.mongodb.name }}
+          image: {{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}
+          ports:
+            - containerPort: {{ .Values.mongodb.containerPort }}
+              name: {{ .Values.mongodb.portName }}
+          volumeMounts:
+            - name: {{ .Values.mongodb.volume.name }}
+              mountPath:  {{ .Values.mongodb.volume.mountPath }}
+  volumeClaimTemplates:
+    - metadata:
+        name:  {{ .Values.mongodb.volume.name }}
+      spec:
+        accessModes: [ "{{ .Values.mongodb.volume.accessMode }}" ]
+        storageClassName: {{ .Values.mongodb.volume.storageClassName }}
+        resources:
+          requests:
+            storage: {{ .Values.mongodb.volume.size }}

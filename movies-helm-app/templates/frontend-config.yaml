@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.frontend.configMap.name }}
+data:
+  config.js: |
+    window._env_ = {
+      API_URL: "{{ .Values.frontend.configMap.apiUrl }}"
+    };
+

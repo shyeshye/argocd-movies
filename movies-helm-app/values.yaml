@@ -1,0 +1,69 @@
+docker:
+  secret:
+    name: mydockerkey
+
+mongodb:
+  name: mongodb
+  replicas: 1
+  labels:
+    app: mongodb
+  image:
+    repository: mongo
+    tag: latest
+  containerPort: 27017
+  portName: mongo
+  service:
+    name: mongodb
+  volume:
+    name: mongom-data
+    accessMode: ReadWriteOnce
+    storageClassName: manual
+    size: 5Gi
+    mountPath: /data/db
+
+backend:
+  name: backend
+  labels:
+    app: backend
+  deployment:
+    replicas: 1
+    containers:
+      name: backend
+      image:
+        repository: shyeshye/shyerepo
+        tag: my-server
+      containerPort: 3000
+      env:
+        name: MONGO_URL
+        value: "mongodb://mongodb:27017/cinema"
+  service:
+    type: NodePort
+    protocol: TCP
+    port: 3000
+    targetPort: 3000
+
+
+frontend:
+  name: frontend
+  labels:
+    app: frontend
+  configMap:
+    name: frontend-config
+    apiUrl: "http://129.159.142.8:30955/api"
+  deployment:
+    replicas: 1
+    containers:
+      name: frontend
+      image:
+        repository: shyeshye/shyerepo
+        tag: my-client
+      containerPort: 80
+    volume:
+      name: config-volume
+      mountPath: /usr/share/nginx/html/config.js
+      subPath: config.js
+  service:
+    type: NodePort
+    protocol: TCP
+    port: 80
+    targetPort: 80
