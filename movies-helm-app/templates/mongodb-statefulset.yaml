@@ -27,7 +27,6 @@ spec:
         name:  {{ .Values.mongodb.volume.name }}
       spec:
         accessModes: [ "{{ .Values.mongodb.volume.accessMode }}" ]
-        storageClassName: {{ .Values.mongodb.volume.storageClassName }}
         resources:
           requests:
             storage: {{ .Values.mongodb.volume.size }}
