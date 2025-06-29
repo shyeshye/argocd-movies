@@ -17,7 +17,6 @@ mongodb:
   volume:
     name: mongom-data
     accessMode: ReadWriteOnce
-    storageClassName: manual
     size: 5Gi
     mountPath: /data/db
 
@@ -37,7 +36,7 @@ backend:
         name: MONGO_URL
         value: "mongodb://mongodb:27017/cinema"
   service:
-    type: NodePort
+    type: LoadBalancer
     protocol: TCP
     port: 3000
     targetPort: 3000
@@ -63,7 +62,7 @@ frontend:
       mountPath: /usr/share/nginx/html/config.js
       subPath: config.js
   service:
-    type: NodePort
+    type: LoadBalancer
     protocol: TCP
     port: 80
     targetPort: 80
